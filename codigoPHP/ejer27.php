@@ -4,8 +4,25 @@
         <title>Formulario</title>
         <meta charset="UTF-8">
         <style>
-            .formulario{
+            html{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            .formulario, .datos{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+            }
+
+            fieldset, .cajon{
                 display: block;
+                border: 2px black solid;
+                margin-bottom: 20px;
+                padding: 5px;
             }
 
             .bloque{
@@ -38,18 +55,6 @@
             return $fechaActual->diff($fechaFormateada)->y;
         }
 
-        function calcularPorcentaje($parte, $total) {
-            return ($parte / $total ) * 100;
-        }
-
-        function calcularMediaArrays($valores) {
-            if (is_array($valores)) {
-                
-            } else {
-                return $valores;
-            }
-        }
-
         $estadisticas = array(
             "edad" => 0,
             "nEdad" => 0,
@@ -67,7 +72,7 @@
                 "medico" => 0,
                 "bombero" => 0,
                 "otro" => 0,
-                "no_trabajo" => 0
+                "no trabajo" => 0
             ),
             "mascotas" => array(
                 "gato" => 0,
@@ -79,12 +84,12 @@
                 "otro" => 0,
             )
         );
-        define("NPERSONAS", 1);
+        define("NPERSONAS", 5);
         define("OBLIGATORIO", 1);
-        $trabajos = array("camarero", "mecanico", "fisico", "quimico", "piloto", "medico", "bombero", "otro", "no_trabajo");
+        $trabajos = array("camarero", "mecanico", "fisico", "quimico", "piloto", "policia", "medico", "bombero", "otro", "no trabajo");
 
         $entradaOK = true; //Variable que comprobará si esta bien metida la entrada o n
-        for ($persona = 0; $persona < NPERSONAS; $persona++) {
+        for ($persona = 1; $persona <= NPERSONAS; $persona++) {
 
             $formulario[$persona] = array(
                 "nombre" => null,
@@ -142,6 +147,7 @@
         if ($entradaOK) {
 
             for ($persona = 0; $persona < NPERSONAS; $persona++) {
+                echo '<div class="cajon">';
                 $formulario[$persona]['nombre'] = $_REQUEST['nombre'][$persona];
                 $formulario[$persona]['genero'] = $_REQUEST['genero'][$persona];
                 $formulario[$persona]['fechaNacimiento'] = $_REQUEST['fechaNacimiento'][$persona];
@@ -180,7 +186,7 @@
                     echo "<p>Mascotas: ";
                     foreach ($formulario[$persona]['mascotas'] as $mascota) {
                         echo $mascota . " ";
-                        $estadisticas['mascota'][$mascota]++;
+                        $estadisticas['mascotas'][$mascota]++;
                     }
                     echo "</p>";
                 }
@@ -188,7 +194,7 @@
                 $estadisticas['salario'] += $formulario[$persona]['salario'];
                 $estadisticas['empleo'][$formulario[$persona]['empleo']]++;
 
-                if (isset($formulario[$persona]['fechaNacimiento'])) {
+                if (!empty($formulario[$persona]['fechaNacimiento'])) {
                     $estadisticas['edad'] += calcularEdad($formulario[$persona]['fechaNacimiento']);
                     $estadisticas['nEdad']++;
                 }
@@ -202,18 +208,38 @@
                     $estadisticas['peso'] += $formulario[$persona]['peso'];
                     $estadisticas['nPeso']++;
                 }
+                echo '</div>';
             }
-            echo "<p>Medias: <br>";
+
+            echo "<h2>Medias:</h2>\n<p>";
+            echo ($estadisticas['edad'] > 0 ? "Edad media: " . $estadisticas['edad'] / $estadisticas['nEdad'] : "Nadie ha introducido la fecha de nacimiento") . "<br>";
             echo ($estadisticas['altura'] > 0 ? "Altura: " . $estadisticas['altura'] / $estadisticas['nAltura'] : "Nadie ha introducido la altura") . "<br>";
             echo ($estadisticas['peso'] > 0 ? "Peso: " . $estadisticas['peso'] / $estadisticas['nPeso'] : "Nadie ha introducido el peso") . "</p>";
-            echo "Trabajos: ";
+            echo "<p>Trabajos: <br>";
+            $total = array_sum($estadisticas['empleo']);
+            foreach ($estadisticas['empleo'] as $trabajo => $cuenta) {
+                if ($cuenta > 0) {
+                    echo "Porcentaje de: " . $trabajo . "(s) " . $cuenta . "/" . $total . " -> " . (($cuenta / $total) * 100) . "%<br>";
+                } else {
+                    echo "No hay nadie tabajando de " . $trabajo . "<br>";
+                }
+            }
+            echo"</p>\n<p>Mascotas:<br>";
+            $total = array_sum($estadisticas['mascotas']);
+            foreach ($estadisticas['mascotas'] as $mascota => $cuenta) {
+                if ($cuenta > 0) {
+                    echo "Porcentaje de: " . $mascota . "(s) " . $cuenta . "/" . $total . " -> " . (($cuenta / $total) * 100) . "%<br>";
+                } else {
+                    echo "No hay nadie de mascota un(a) " . $mascota . "<br>";
+                }
+            }
         } else {
             ?>
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <div class="formulario">
                 <?php
                 for ($persona = 0; $persona < NPERSONAS; $persona++) {
                     ?>
-
                     <!--Lista de empleos-->
                     <datalist id="empleos">
                         <option value="camarero">Camarero</option> 
@@ -222,15 +248,15 @@
                         <option value="fisico">Fisico</option>
                         <option value="quimico">Quimico</option>
                         <option value="piloto">Piloto</option>
-                        <option value="policio">Policia</option>
+                        <option value="policia">Policia</option>
                         <option value="medico">Medico</option>
                         <option value="bombero">Bombero</option>
                         <option value="otro">Otro</option>
-                        <option value="no_trabajo">No trabajo</option>
+                        <option value="no trabajo">No trabajo</option>
                     </datalist>
 
-                    <div class="formulario">
-
+                    <fieldset>
+                        <legend>Formulario nº<?php echo $persona ?></legend>
                         <div class="bloque">
                             <label for="nombre">Introduce tu nombre: </label>
                             <input type="text" id="nombre" name="nombre[]" value="<?php echo $_REQUEST['nombre'][$persona] ?>">
@@ -242,19 +268,19 @@
                         <div class="bloque">
                             <p>Introduce tu genero: </p>
                             <label for="genero">Hombre</label>
-                            <input type="radio" id="hombre" name="genero[]" value="hombre" <?php
+                            <input type="radio" id="hombre" name="genero[<?php echo $persona ?>]" value="hombre" <?php
                     if (isset($_REQUEST['genero']) && $_REQUEST['genero'][$persona] == "hombre") {
                         echo 'checked';
                     }
                             ?> >
                             <label for="genero">Mujer</label>
-                            <input type="radio" id="mujer" name="genero[]" value="mujer" <?php
+                            <input type="radio" id="mujer" name="genero[<?php echo $persona ?>]" value="mujer" <?php
                     if (isset($_REQUEST['genero']) && $_REQUEST['genero'][$persona] == "mujer") {
                         echo 'checked';
                     }
                             ?> >
                             <label for="genero">Otro</label>
-                            <input type="radio" id="otro" name="genero[]" value="otro" <?php
+                            <input type="radio" id="otro" name="genero[<?php echo $persona ?>]" value="otro" <?php
                     if (isset($_REQUEST['genero']) && $_REQUEST['genero'][$persona] == "otro") {
                         echo 'checked';
                     }
@@ -364,12 +390,13 @@
                     }
                             ?> >
                         </div>
-                    </div>
+                    </fieldset>
 
 
                     <?php
                 }
                 ?>
+                </div>
                 <input type="submit" name="enviar" value="enviar">
             </form>
             <?php
