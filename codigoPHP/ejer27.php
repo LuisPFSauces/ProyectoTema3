@@ -45,7 +45,7 @@
          * @since 21-10-2020
          */
 
-        require_once '201020libreriaValidacion.php'; //Se carga la libreria de validación
+        require_once '../core/201020libreriaValidacion.php'; //Se carga la libreria de validación
 
         function calcularEdad($fecha) {
 
@@ -142,8 +142,6 @@
         } else {
             $entradaOK = false;
         }
-
-        var_dump($_REQUEST);
         
         if ($entradaOK) {
 
@@ -259,7 +257,7 @@
                         <legend>Formulario nº<?php echo $persona ?></legend>
                         <div class="bloque">
                             <label for="nombre">Introduce tu nombre: </label>
-                            <input type="text" id="nombre" name="nombre[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['nombre'][$persona];} ?>">
+                            <input type="text" id="nombre" name="nombre[]" value="<?php if( isset($_REQUEST['nombre']) ){ echo $_REQUEST['nombre'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['nombre']) ? "<p class=\"error\">" . $errores[$persona]['nombre'] . "</p>" : "";
                             ?>
@@ -292,7 +290,7 @@
 
                         <div class="bloque">
                             <label for="fechaNacimiento">Introduce tu fecha de nacimiento: </label>
-                            <input type="date" id="fechaNacimiento[]" name="fechaNacimiento[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['fechaNacimiento'][$persona];} ?>">
+                            <input type="date" id="fechaNacimiento[]" name="fechaNacimiento[]" value="<?php if( isset($_REQUEST['fechaNacimiento']) ){ echo $_REQUEST['fechaNacimiento'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['fechaNacimiento']) ? "<p class=\"error\">" . $errores[$persona]['fechaNacimiento'] . "</p>" : "";
                             ?>
@@ -300,7 +298,7 @@
 
                         <div class="bloque">
                             <label for="telefono">Introduce tu telefono: </label>
-                            <input type="text" id="telefono" name="telefono[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['telefono'][$persona];} ?>">
+                            <input type="text" id="telefono" name="telefono[]" value="<?php if( isset($_REQUEST['telefono']) ){ echo $_REQUEST['telefono'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['telefono']) ? "<p class=\"error\">" . $errores[$persona]['telefono'] . "</p>" : "";
                             ?>
@@ -308,7 +306,7 @@
 
                         <div class="bloque">
                             <label for="dni">Introduce tu dni: </label>
-                            <input type="text" id="dni" name="dni[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['dni'][$persona];} ?>">
+                            <input type="text" id="dni" name="dni[]" value="<?php if( isset($_REQUEST['dni']) ){ echo $_REQUEST['dni'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['dni']) ? "<p class=\"error\">" . $errores[$persona]['dni'] . "</p>" : "";
                             ?>
@@ -316,7 +314,7 @@
 
                         <div class="bloque">
                             <label for="altura">Introduce tu altura: </label>
-                            <input type="number" id="altura" name="altura[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['altura'][$persona];} ?>">
+                            <input type="number" id="altura" name="altura[]" value="<?php if( isset($_REQUEST['altura']) ){ echo $_REQUEST['altura'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['altura']) ? "<p class=\"error\">" . $errores[$persona]['altura'] . "</p>" : "";
                             ?>
@@ -324,7 +322,7 @@
 
                         <div class="bloque">
                             <label for="peso">Introduce tu peso: </label>
-                            <input type="number" id="peso" name="peso[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['peso'][$persona];} ?>">
+                            <input type="number" id="peso" name="peso[]" value="<?php if( isset($_REQUEST['peso']) ){ echo $_REQUEST['peso'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['peso']) ? "<p class=\"error\">" . $errores[$persona]['peso'] . "</p>" : "";
                             ?>
@@ -332,7 +330,7 @@
 
                         <div class="bloque">
                             <label for="salario">Introduce tu salario: </label>
-                            <input type="text" id="salario[]" name="salario[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['salario'][$persona];} ?>">
+                            <input type="text" id="salario[]" name="salario[]" value="<?php if( isset($_REQUEST['salario']) ){ echo $_REQUEST['salario'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['salario']) ? "<p class=\"error\">" . $errores[$persona]['salario'] . "</p>" : "";
                             ?>
@@ -340,7 +338,7 @@
 
                         <div class="bloque">
                             <label for="empleo">Introduce tu empleo: </label>
-                            <input list="empleos" id="empleo" name="empleo[]" value="<?php if( isset($_REQUEST['enviar']) ){ echo $_REQUEST['empleo'][$persona];} ?>">
+                            <input list="empleos" id="empleo" name="empleo[]" value="<?php if( isset($_REQUEST['empleo']) ){ echo $_REQUEST['empleo'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['empleo']) ? "<p class=\"error\">" . $errores[$persona]['empleo'] . "</p>" : "";
                             ?>
@@ -349,43 +347,43 @@
                         <div class="bloque">
                             <label for="gato">Gato</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['gato']" id="gato" value="gato" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['gato'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("gato", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="perro">Perro</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['perro']" id="perro" value="perro" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['perro'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("perro", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="loro">Loro</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['loro']" id="loro" value="loro" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['loro'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("loro", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="iguana">Iguana</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['iguana']" id="iguana" value="iguana" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['iguana'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("iguana", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="hamster">Hamster</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['hamster']" id="hasmter" value="hasmter" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['hasmter'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("hamster", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="coballa">Coballa</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['coballa']" id="coballa" value="coballa" <?php
-                    if (isset($_REQUEST['mascotas'][$persona]['coballa'])) {
+                    if (isset($_REQUEST['mascotas'][$persona]) && in_array("coballa", $_REQUEST['mascotas'][$persona])) {
                         echo 'checked';
                     }
                             ?> >
                             <label for="otro">Otro</label>
                             <input type="checkbox" name="mascotas[<?php echo $persona ?>]['otro']" id="otro" value="otro" <?php
-                    if ( isset($_REQUEST['mascotas'][$persona]['otro'])) {
+                    if ( isset($_REQUEST['mascotas'][$persona]) && in_array("otro", $_REQUEST['mascotas'][$persona]) ) {
                         echo 'checked';
                     }
                             ?> >
