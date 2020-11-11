@@ -121,7 +121,6 @@
         if (isset($_REQUEST['enviar'])) {
 
             for ($persona = 0; $persona < NPERSONAS; $persona++) {
-                echo $errores[$persona]['fechaNacimiento'];
                 $errores[$persona]['nombre'] = validacionFormularios::comprobarAlfaNumerico($_REQUEST['nombre'][$persona], 25, 2, OBLIGATORIO);
                 $errores[$persona]['genero'] = !isset($_REQUEST['genero'][$persona]) ? "Por favor introduce marca al menos un campo" : null;
                 $errores[$persona]['fechaNacimiento'] = validacionFormularios::validarFecha($_REQUEST['fechaNacimiento'][$persona], (new DateTime())->format("m/d/Y"));
@@ -290,7 +289,7 @@
 
                         <div class="bloque">
                             <label for="fechaNacimiento">Introduce tu fecha de nacimiento: </label>
-                            <input type="date" id="fechaNacimiento[]" name="fechaNacimiento[]" value="<?php if( isset($_REQUEST['fechaNacimiento']) ){ echo $_REQUEST['fechaNacimiento'][$persona];} ?>">
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento[]" value="<?php if( isset($_REQUEST['fechaNacimiento']) ){ echo $_REQUEST['fechaNacimiento'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['fechaNacimiento']) ? "<p class=\"error\">" . $errores[$persona]['fechaNacimiento'] . "</p>" : "";
                             ?>
@@ -330,7 +329,7 @@
 
                         <div class="bloque">
                             <label for="salario">Introduce tu salario: </label>
-                            <input type="text" id="salario[]" name="salario[]" value="<?php if( isset($_REQUEST['salario']) ){ echo $_REQUEST['salario'][$persona];} ?>">
+                            <input type="text" id="salario" name="salario[]" value="<?php if( isset($_REQUEST['salario']) ){ echo $_REQUEST['salario'][$persona];} ?>">
                             <?php
                             echo!empty($errores[$persona]['salario']) ? "<p class=\"error\">" . $errores[$persona]['salario'] . "</p>" : "";
                             ?>
